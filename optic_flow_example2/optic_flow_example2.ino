@@ -8,11 +8,12 @@
 // Constants
 //------------------------------------------------------------------------------------
 enum {NUM_SENSOR=2};
-const int csPin[NUM_SENSOR] = {49,53};  // Chip select pin
-const int resolution = 1600;        // allowed values 400,1600 counts/inch
-const int frameRate = 2000;         // allowed range [2000,6469]
-const int shutterSpeed = 5000;      // allowed arange [1000,9000] clock cycles (where does this come from?)
-const int loopDt = 0;               // loop delay (ms)
+const int csPin[NUM_SENSOR] = {49,53};   // Chip select pins
+const int resetPin[NUM_SENSOR] = {48,47}; // Chip reset pins
+const int resolution = 1600;             // allowed values 400,1600 counts/inch
+const int frameRate = 2000;              // allowed range [2000,6469]
+const int shutterSpeed = 5000;           // allowed arange [1000,9000] clock cycles (where does this come from?)
+const int loopDt = 0;                    // loop delay (ms)
 const bool showSettings = false;
 
 
@@ -26,7 +27,19 @@ void setup()
 {
     Serial.begin(115200);
     //Serial.begin(1000000);
-    delay(1000);
+
+    for (int i=0; i<NUM_SENSOR;i++)
+    {
+        pinMode(resetPin[i],OUTPUT);
+        digitalWrite(resetPin[i],HIGH);
+    }
+    delay(100);
+    for (int i=0; i<NUM_SENSOR; i++)
+    {
+        digitalWrite(resetPin[i],LOW);
+    }
+    delay(1500);
+
 
     // Setup sensor
     // ----------------------------------------------------------------------------
